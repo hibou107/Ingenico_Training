@@ -8,7 +8,6 @@ trait Functor[F[_]] {
 trait ApplicativeFunctor[F[_]] extends Functor[F] {
   def pure[A](a: A): F[A]
 
-  def map2[A, B, C](first: F[A], second: F[B])(f: (A, B) => C): F[C]
 
   def map3[A, B, C, D](first: F[A], second: F[B], third: F[C])(f: (A, B, C) => D): F[D] = {
     val tuple = map2(first, second) { (firstValue, secondValue) => (firstValue, secondValue)
@@ -31,6 +30,8 @@ trait ApplicativeFunctor[F[_]] extends Functor[F] {
     }
   }
 
+  def map2[A, B, C](first: F[A], second: F[B])(f: (A, B) => C): F[C]
+
 
   def ap[A, B](ff: F[A => B])(fa: F[A]): F[B] = map2(fa, ff){ (value, function) =>
     function(value)
@@ -49,7 +50,6 @@ object optionApplicativeFunctor extends ApplicativeFunctor[Option] {
 }
 
 
-trait Monad[F[_]] extends ApplicativeFunctor[F]
 
 
 object ApplicativeFunctor {
